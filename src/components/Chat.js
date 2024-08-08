@@ -21,11 +21,12 @@ export const Chat = ({ room }) => {
   const [selectedMessageId, setSelectedMessageId] = useState(null);
   const [requestFormData, setRequestFormData] = useState({
     heading: "",
-    items: "",
+    items: [],
     logisticsFees: "",
     pickupLocation: "",
     dropLocation: ""
   });
+  const [itemInput, setItemInput] = useState(""); // State for the new item input
   const messagesRef = collection(db, "messages");
 
   useEffect(() => {
@@ -75,11 +76,12 @@ export const Chat = ({ room }) => {
     // Reset form data
     setRequestFormData({
       heading: "",
-      items: "",
+      items: [],
       logisticsFees: "",
       pickupLocation: "",
       dropLocation: ""
     });
+    setItemInput(""); // Reset item input
     setShowRequestForm(false);
   };
 
@@ -97,6 +99,20 @@ export const Chat = ({ room }) => {
 
   const handleICanGetClick = () => {
     setNewMessage(""); // Clear the message input to avoid any unwanted text
+  };
+
+  const handleAddItem = () => {
+    if (itemInput) {
+      setRequestFormData((prevData) => ({
+        ...prevData,
+        items: [...prevData.items, itemInput]
+      }));
+      setItemInput(""); // Clear input field after adding
+    }
+  };
+
+  const handleItemInputChange = (event) => {
+    setItemInput(event.target.value);
   };
 
   return (
@@ -175,9 +191,18 @@ export const Chat = ({ room }) => {
               List of items required:
               <input
                 type="text"
-                value={requestFormData.items}
-                onChange={(e) => setRequestFormData({ ...requestFormData, items: e.target.value })}
+                value={itemInput}
+                onChange={handleItemInputChange}
+                placeholder="Add an item"
               />
+              <button type="button" onClick={handleAddItem}>
+                Add Item
+              </button>
+              <ul>
+                {requestFormData.items.map((item, index) => (
+                  <li key={index}>{item}</li>
+                ))}
+              </ul>
             </label>
             <label>
               Logistics fees offered:
