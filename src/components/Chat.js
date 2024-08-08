@@ -19,6 +19,7 @@ export const Chat = ({ room }) => {
   const [newMessage, setNewMessage] = useState("");
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [selectedMessageId, setSelectedMessageId] = useState(null);
+  const [expandedMessageId, setExpandedMessageId] = useState(null); // For expanding message details
   const [requestFormData, setRequestFormData] = useState({
     heading: "",
     items: [],
@@ -92,6 +93,10 @@ export const Chat = ({ room }) => {
     });
   };
 
+  const handleViewDetails = (messageId) => {
+    setExpandedMessageId(expandedMessageId === messageId ? null : messageId); // Toggle the expanded state
+  };
+
   const handleRequestButtonClick = () => {
     setShowRequestForm(true);
     setSelectedMessageId(null);
@@ -144,6 +149,24 @@ export const Chat = ({ room }) => {
                 >
                   Fulfill
                 </button>
+                <button
+                  className="view-details-button"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevents the click from triggering the message click event
+                    handleViewDetails(message.id);
+                  }}
+                >
+                  {expandedMessageId === message.id ? "Hide Details" : "View Details"}
+                </button>
+              </div>
+            )}
+            {expandedMessageId === message.id && message.requestDetails && (
+              <div className="message-details">
+                <p><strong>Heading:</strong> {message.requestDetails.heading}</p>
+                <p><strong>Items:</strong> {message.requestDetails.items.join(", ")}</p>
+                <p><strong>Logistics Fees:</strong> {message.requestDetails.logisticsFees}</p>
+                <p><strong>Pickup Location:</strong> {message.requestDetails.pickupLocation}</p>
+                <p><strong>Drop Location:</strong> {message.requestDetails.dropLocation}</p>
               </div>
             )}
           </div>
