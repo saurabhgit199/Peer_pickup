@@ -1,0 +1,117 @@
+/* Chat.css */
+.chat-app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: sans-serif;
+    width: 90%;
+    margin: 0 auto;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 2px solid #3b5998;
+  }
+  .header {
+    background-color: #3b5998;
+    color: white;
+    width: 100%;
+    text-align: center;
+  }
+  .messages {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    height: 80%;
+    overflow-y: auto;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  .message {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    cursor: pointer; /* Change cursor to pointer for clickable messages */
+    padding: 10px;
+    border-radius: 5px;
+    position: relative; /* For positioning the "Fulfill" button */
+  }
+  .message.i-want {
+    background-color: #e0f7fa; /* Light blue for "I Want" */
+  }
+  .message.i-can-get {
+    background-color: #e8f5e9; /* Light green for "I Can Get" */
+  }
+  .message.fulfilled.i-want {
+    background-color: #b2ebf2; /* Lighter blue for fulfilled "I Want" */
+    border: 2px solid #0288d1; /* Blue border for fulfilled "I Want" */
+  }
+  .message.fulfilled.i-can-get {
+    background-color: #c8e6c9; /* Lighter green for fulfilled "I Can Get" */
+    border: 2px solid #43a047; /* Green border for fulfilled "I Can Get" */
+  }
+  .message.highlighted {
+    border: 2px solid #ff9800; /* Orange border for highlighted messages */
+    background-color: #fff3e0; /* Light orange background for highlighted messages */
+  }
+  .fulfill-button {
+    display: none; /* Initially hidden */
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background-color: #ff5722; /* Orange background for "Fulfill" button */
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .message:hover .fulfill-button {
+    display: block; /* Show button on hover */
+  }
+  .new-message-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 10px;
+  }
+  .new-message-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 16px;
+    color: #333;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  .message-buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+  .message-button {
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .message-button.i-want {
+    background-color: #0288d1; /* Blue background for "I Want" */
+    color: #fff;
+  }
+  .message-button.i-can-get {
+    background-color: #43a047; /* Green background for "I Can Get" */
+    color: #fff;
+  }
+  .send-button {
+    border: none;
+    background: #3b5998;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  

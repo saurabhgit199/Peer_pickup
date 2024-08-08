@@ -1,0 +1,35 @@
+/* src/styles/App.css */
+.App {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .app-header {
+    background-color: #3b5998;
+    color: white;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .app-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .sign-out {
+    text-align: center;
+    padding: 10px;
+  }
+  
+  .sign-out button {
+    background-color: #f44336; /* Red */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  

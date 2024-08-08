@@ -1,0 +1,70 @@
+/* src/styles/RequestForm.css */
+.request-form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border: 2px solid #3b5998;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    width: 400px;
+  }
+  
+  .request-form h2 {
+    margin-top: 0;
+  }
+  
+  .request-form label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .request-form input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .request-form .items-list {
+    margin-bottom: 10px;
+  }
+  
+  .request-form .items-list label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .request-form .items-list button {
+    margin-top: 10px;
+    background-color: #3b5998;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .request-form button[type="submit"] {
+    background-color: #3b5998;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .request-form .close-button {
+    background-color: #e53935;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
