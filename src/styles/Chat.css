@@ -1,4 +1,4 @@
-/* Chat.css */
+/* src/styles/Chat.css */
 .chat-app {
     display: flex;
     flex-direction: column;
@@ -10,12 +10,15 @@
     overflow: hidden;
     border: 2px solid #3b5998;
   }
+  
   .header {
     background-color: #3b5998;
     color: white;
     width: 100%;
     text-align: center;
+    padding: 10px;
   }
+  
   .messages {
     display: flex;
     flex-direction: column;
@@ -26,92 +29,89 @@
     padding: 10px;
     margin-bottom: 10px;
   }
+  
   .message {
     display: flex;
     align-items: flex-start;
     margin-bottom: 10px;
-    cursor: pointer; /* Change cursor to pointer for clickable messages */
     padding: 10px;
-    border-radius: 5px;
-    position: relative; /* For positioning the "Fulfill" button */
-  }
-  .message.i-want {
-    background-color: #e0f7fa; /* Light blue for "I Want" */
-  }
-  .message.i-can-get {
-    background-color: #e8f5e9; /* Light green for "I Can Get" */
-  }
-  .message.fulfilled.i-want {
-    background-color: #b2ebf2; /* Lighter blue for fulfilled "I Want" */
-    border: 2px solid #0288d1; /* Blue border for fulfilled "I Want" */
-  }
-  .message.fulfilled.i-can-get {
-    background-color: #c8e6c9; /* Lighter green for fulfilled "I Can Get" */
-    border: 2px solid #43a047; /* Green border for fulfilled "I Can Get" */
-  }
-  .message.highlighted {
-    border: 2px solid #ff9800; /* Orange border for highlighted messages */
-    background-color: #fff3e0; /* Light orange background for highlighted messages */
-  }
-  .fulfill-button {
-    display: none; /* Initially hidden */
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    background-color: #ff5722; /* Orange background for "Fulfill" button */
-    color: white;
-    border: none;
-    padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
+    position: relative;
   }
-  .message:hover .fulfill-button {
-    display: block; /* Show button on hover */
+  
+  .i-want {
+    background-color: #e0f7fa; /* Light cyan background for 'I Want' messages */
   }
+  
+  .i-can-get {
+    background-color: #fff3e0; /* Light orange background for 'I Can Get' messages */
+  }
+  
+  .fulfilled {
+    background-color: #c8e6c9; /* Light green background for fulfilled messages */
+  }
+  
+  .user {
+    font-weight: bold;
+    margin-right: 10px;
+    color: #333;
+  }
+  
   .new-message-form {
     display: flex;
-    flex-direction: column;
     width: 100%;
     padding: 10px;
+    border-top: 1px solid #ddd;
   }
+  
   .new-message-input {
+    flex: 1;
     border: none;
     outline: none;
     background: transparent;
     font-size: 16px;
     color: #333;
     padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
+    border-radius: 5px 0 0 5px;
   }
-  .message-buttons {
-    display: flex;
-    justify-content: space-between;
-  }
-  .message-button {
+  
+  .send-button,
+  .request-button,
+  .i-can-get-button {
     border: none;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  .message-button.i-want {
-    background-color: #0288d1; /* Blue background for "I Want" */
-    color: #fff;
-  }
-  .message-button.i-can-get {
-    background-color: #43a047; /* Green background for "I Can Get" */
-    color: #fff;
-  }
-  .send-button {
-    border: none;
+    outline: none;
     background: #3b5998;
     color: #fff;
     font-size: 16px;
     font-weight: bold;
     padding: 10px 20px;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+  }
+  
+  .request-button {
+    background: #ff5722; /* Different color for 'I Want' button */
+  }
+  
+  .i-can-get-button {
+    background: #8bc34a; /* Different color for 'I Can Get' button */
+  }
+  
+  .message-actions {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
+  
+  .fulfill-button {
+    border: none;
+    outline: none;
+    background: #4caf50;
+    color: #fff;
+    padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 12px;
   }
   

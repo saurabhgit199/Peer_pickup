@@ -1,4 +1,3 @@
-// src/components/Chat.js
 import React, { useState, useEffect } from "react";
 import { db, auth } from "../firebase-config";
 import {
@@ -10,17 +9,23 @@ import {
   query,
   orderBy,
   updateDoc,
-  doc,
+  doc
 } from "firebase/firestore";
 import "../styles/Chat.css";
-import RequestForm from "./RequestForm";
+import "../styles/RequestForm.css";
 
 export const Chat = ({ room }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [category, setCategory] = useState("I Want");
-  const [highlightedMessageId, setHighlightedMessageId] = useState(null);
   const [showRequestForm, setShowRequestForm] = useState(false);
+  const [selectedMessageId, setSelectedMessageId] = useState(null);
+  const [requestFormData, setRequestFormData] = useState({
+    heading: "",
+    items: "",
+    logisticsFees: "",
+    pickupLocation: "",
+    dropLocation: ""
+  });
   const messagesRef = collection(db, "messages");
 
   useEffect(() => {
@@ -44,28 +49,54 @@ export const Chat = ({ room }) => {
     event.preventDefault();
 
     if (newMessage === "") return;
+
     await addDoc(messagesRef, {
       text: newMessage,
       createdAt: serverTimestamp(),
       user: auth.currentUser.displayName,
       room,
-      category,
-      fulfilled: false,
     });
 
     setNewMessage("");
-    setCategory("I Want");
   };
 
-  const handleMarkAsFulfilled = async (messageId) => {
-    const messageDoc = doc(db, "messages", messageId);
-    await updateDoc(messageDoc, {
-      fulfilled: true,
+  const handleRequestFormSubmit = async (event) => {
+    event.preventDefault();
+
+    if (requestFormData.heading === "") return;
+    await addDoc(messagesRef, {
+      text: `I Want: ${requestFormData.heading}`,
+      createdAt: serverTimestamp(),
+      user: auth.currentUser.displayName,
+      room,
+      requestDetails: requestFormData // Add the request form data to the message
+    });
+
+    // Reset form data
+    setRequestFormData({
+      heading: "",
+      items: "",
+      logisticsFees: "",
+      pickupLocation: "",
+      dropLocation: ""
+    });
+    setShowRequestForm(false);
+  };
+
+  const handleFulfill = async (messageId) => {
+    const messageRef = doc(db, "messages", messageId);
+    await updateDoc(messageRef, {
+      fulfilled: true
     });
   };
 
-  const handleHighlightMessage = (messageId) => {
-    setHighlightedMessageId(messageId);
+  const handleRequestButtonClick = () => {
+    setShowRequestForm(true);
+    setSelectedMessageId(null);
+  };
+
+  const handleICanGetClick = () => {
+    setNewMessage(""); // Clear the message input to avoid any unwanted text
   };
 
   return (
@@ -77,26 +108,26 @@ export const Chat = ({ room }) => {
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`message ${message.category.toLowerCase().replace(/ /g, "-")} ${message.fulfilled ? "fulfilled" : ""} ${highlightedMessageId === message.id ? "highlighted" : ""}`}
+            className={`message ${message.fulfilled ? 'fulfilled' : (message.text.startsWith('I Want') ? 'i-want' : 'i-can-get')}`}
             onClick={() => {
-              if (message.category === "I Want" && !message.fulfilled && auth.currentUser) {
-                handleMarkAsFulfilled(message.id);
-              } else {
-                handleHighlightMessage(message.id);
+              if (message.text.startsWith('I Want')) {
+                setSelectedMessageId(message.id);
               }
             }}
           >
             <span className="user">{message.user}:</span> {message.text}
-            {message.category === "I Want" && !message.fulfilled && (
-              <button
-                className="fulfill-button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleMarkAsFulfilled(message.id);
-                }}
-              >
-                Fulfill
-              </button>
+            {message.text.startsWith('I Want') && !message.fulfilled && (
+              <div className="message-actions">
+                <button
+                  className="fulfill-button"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevents the click from triggering the message click event
+                    handleFulfill(message.id);
+                  }}
+                >
+                  Fulfill
+                </button>
+              </div>
             )}
           </div>
         ))}
@@ -109,34 +140,73 @@ export const Chat = ({ room }) => {
           className="new-message-input"
           placeholder="Type your message here..."
         />
-        <div className="message-buttons">
-          <button
-            type="button"
-            className="message-button i-want"
-            onClick={() => setShowRequestForm(true)}
-          >
-            I Want
-          </button>
-          <button
-            type="button"
-            className="message-button i-can-get"
-            onClick={() => setCategory("I Can Get")}
-          >
-            I Can Get
-          </button>
-          <button
-            type="submit"
-            className="send-button"
-          >
-            Send
-          </button>
-        </div>
+        <button type="submit" className="send-button">
+          Send
+        </button>
+        <button
+          type="button"
+          className="request-button"
+          onClick={handleRequestButtonClick}
+        >
+          I Want
+        </button>
+        <button
+          type="button"
+          className="i-can-get-button"
+          onClick={handleICanGetClick}
+        >
+          I Can Get
+        </button>
       </form>
       {showRequestForm && (
-        <RequestForm 
-          onClose={() => setShowRequestForm(false)} 
-          room={room} 
-        />
+        <div className="request-form">
+          <h2>Request Details</h2>
+          <form onSubmit={handleRequestFormSubmit}>
+            <label>
+              What do you want:
+              <input
+                type="text"
+                value={requestFormData.heading}
+                onChange={(e) => setRequestFormData({ ...requestFormData, heading: e.target.value })}
+                placeholder="What do you want?"
+              />
+            </label>
+            <label>
+              List of items required:
+              <input
+                type="text"
+                value={requestFormData.items}
+                onChange={(e) => setRequestFormData({ ...requestFormData, items: e.target.value })}
+              />
+            </label>
+            <label>
+              Logistics fees offered:
+              <input
+                type="text"
+                value={requestFormData.logisticsFees}
+                onChange={(e) => setRequestFormData({ ...requestFormData, logisticsFees: e.target.value })}
+              />
+            </label>
+            <label>
+              Pickup location:
+              <input
+                type="text"
+                value={requestFormData.pickupLocation}
+                onChange={(e) => setRequestFormData({ ...requestFormData, pickupLocation: e.target.value })}
+              />
+            </label>
+            <label>
+              Drop location:
+              <input
+                type="text"
+                value={requestFormData.dropLocation}
+                onChange={(e) => setRequestFormData({ ...requestFormData, dropLocation: e.target.value })}
+              />
+            </label>
+            <button type="submit" className="submit-button">Submit</button>
+            <button type="button" className="close-button" onClick={() => setShowRequestForm(false)}>Close</button>
+          </form>
+        </div>
       )}
     </div>
   );
