@@ -1,13 +1,16 @@
+/* General Styles for Chat App */
 .chat-app {
     display: flex;
     flex-direction: column;
     align-items: center;
     font-family: sans-serif;
-    width: 90%;
+    width: 100%; /* Full width */
+    max-width: 600px; /* Maximum width for larger screens */
     margin: 0 auto;
     border-radius: 5px;
     overflow: hidden;
     border: 2px solid #3b5998;
+    box-sizing: border-box; /* Include padding and border in width/height */
 }
 
 .header {
@@ -27,30 +30,33 @@
     overflow-y: auto;
     padding: 10px;
     margin-bottom: 10px;
+    box-sizing: border-box;
 }
 
 .message {
     display: flex;
-    flex-direction: column; /* Changed from row to column */
+    flex-direction: column;
     align-items: flex-start;
     margin-bottom: 10px;
     padding: 10px;
     border-radius: 5px;
     cursor: pointer;
     position: relative;
-    background-color: #fff; /* Default background */
+    background-color: #fff;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .i-want {
-    background-color: #e0f7fa; /* Light cyan background for 'I Want' messages */
+    background-color: #e0f7fa;
 }
 
 .i-can-get {
-    background-color: #fff3e0; /* Light orange background for 'I Can Get' messages */
+    background-color: #fff3e0;
 }
 
 .fulfilled {
-    background-color: #c8e6c9; /* Light green background for fulfilled messages */
+    background-color: #c8e6c9;
 }
 
 .user {
@@ -60,14 +66,16 @@
 }
 
 .message-text {
-    margin-bottom: 5px; /* Margin below message text */
+    margin-bottom: 5px;
 }
 
 .new-message-form {
     display: flex;
+    flex-direction: column; /* Stack form elements vertically */
     width: 100%;
     padding: 10px;
     border-top: 1px solid #ddd;
+    box-sizing: border-box;
 }
 
 .new-message-input {
@@ -79,6 +87,7 @@
     color: #333;
     padding: 10px;
     border-radius: 5px 0 0 5px;
+    margin-bottom: 10px; /* Space between input and buttons */
 }
 
 .send-button,
@@ -86,21 +95,29 @@
 .i-can-get-button {
     border: none;
     outline: none;
-    background: #3b5998;
-    color: #fff;
     font-size: 16px;
     font-weight: bold;
-    padding: 10px 20px;
-    border-radius: 0 5px 5px 0;
+    padding: 10px;
+    border-radius: 5px;
     cursor: pointer;
+    margin-bottom: 10px; /* Space between buttons */
+    width: 100%; /* Make buttons take full width */
+    box-sizing: border-box; /* Include padding in width */
+}
+
+.send-button {
+    background: #3b5998;
+    color: #fff;
 }
 
 .request-button {
-    background: #ff5722; /* Different color for 'I Want' button */
+    background: #ff5722;
+    color: #fff;
 }
 
 .i-can-get-button {
-    background: #8bc34a; /* Different color for 'I Can Get' button */
+    background: #8bc34a;
+    color: #fff;
 }
 
 .message-actions {
@@ -110,7 +127,8 @@
     margin-top: 5px; /* Margin above action buttons */
 }
 
-.fulfill-button {
+.fulfill-button,
+.view-details-button {
     border: none;
     outline: none;
     background: #4caf50;
@@ -119,19 +137,15 @@
     border-radius: 5px;
     cursor: pointer;
     font-size: 12px;
-    margin-bottom: 5px; /* Space below fulfill button */
+    margin-bottom: 5px;
+    width: 100%; /* Ensure buttons take full width on mobile */
+    text-align: center; /* Center button text */
 }
 
 .view-details-button {
-    border: none;
-    outline: none;
-    background: #2196F3; /* Color for view details button */
-    color: #fff;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 12px;
+    background: #2196F3;
 }
+
 .message-details {
     margin-top: 10px;
     background-color: #f1f1f1;
@@ -145,3 +159,23 @@
     margin: 5px 0;
 }
 
+/* Media Query for Mobile Devices */
+@media (max-width: 600px) {
+    .new-message-input {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .send-button,
+    .request-button,
+    .i-can-get-button {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    .fulfill-button,
+    .view-details-button {
+        font-size: 14px;
+        padding: 5px 10px;
+    }
+}
