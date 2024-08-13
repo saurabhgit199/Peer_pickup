@@ -1,0 +1,106 @@
+.private-chat {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 350px;
+    height: 500px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .private-chat-header {
+    background-color: #3b5998;
+    color: #fff;
+    padding: 15px;
+    border-radius: 10px 10px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+  
+  .private-chat-header h2 {
+    margin: 0;
+  }
+  
+  .close-chat {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  
+  .close-chat:hover {
+    color: #ffeb3b;
+  }
+  
+  .private-chat-messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .private-chat-message {
+    padding: 10px;
+    border-radius: 8px;
+    max-width: 70%;
+    word-wrap: break-word;
+    font-size: 0.9em;
+  }
+  
+  .private-chat-message.sent {
+    background-color: #e1ffe1;
+    align-self: flex-end;
+  }
+  
+  .private-chat-message.received {
+    background-color: #e1e1e1;
+    align-self: flex-start;
+  }
+  
+  .private-chat-form {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    background-color: #fff;
+  }
+  
+  .private-chat-input {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 10px;
+    font-size: 0.9em;
+    outline: none;
+  }
+  
+  .private-chat-input:focus {
+    border-color: #3b5998;
+  }
+  
+  .private-chat-send-button {
+    background-color: #3b5998;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+  }
+  
+  .private-chat-send-button:hover {
+    background-color: #2a4373;
+  }
+  

@@ -1,25 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { db, auth } from "../firebase-config";
-import {
-  collection,
-  addDoc,
-  where,
-  serverTimestamp,
-  onSnapshot,
-  query,
-  orderBy,
-  updateDoc,
-  doc
-} from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, onSnapshot, query, where, orderBy, updateDoc, doc } from "firebase/firestore";
 import "../styles/Chat.css";
 import "../styles/RequestForm.css";
+import { PrivateChat } from "./PrivateChat";
 
 export const Chat = ({ room }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [showRequestForm, setShowRequestForm] = useState(false);
   const [selectedMessageId, setSelectedMessageId] = useState(null);
-  const [expandedMessageId, setExpandedMessageId] = useState(null); // For expanding message details
+  const [expandedMessageId, setExpandedMessageId] = useState(null);
   const [requestFormData, setRequestFormData] = useState({
     heading: "",
     items: [],
@@ -27,7 +18,10 @@ export const Chat = ({ room }) => {
     pickupLocation: "",
     dropLocation: ""
   });
-  const [itemInput, setItemInput] = useState(""); // State for the new item input
+  const [itemInput, setItemInput] = useState("");
+  const [showPrivateChat, setShowPrivateChat] = useState(false);
+  const [privateChatRequestId, setPrivateChatRequestId] = useState(null);
+
   const messagesRef = collection(db, "messages");
 
   useEffect(() => {
@@ -66,12 +60,12 @@ export const Chat = ({ room }) => {
     event.preventDefault();
 
     if (requestFormData.heading === "") return;
-    await addDoc(messagesRef, {
+    const docRef = await addDoc(messagesRef, {
       text: `I Want: ${requestFormData.heading}`,
       createdAt: serverTimestamp(),
       user: auth.currentUser.displayName,
       room,
-      requestDetails: requestFormData // Add the request form data to the message
+      requestDetails: requestFormData
     });
 
     // Reset form data
@@ -82,7 +76,7 @@ export const Chat = ({ room }) => {
       pickupLocation: "",
       dropLocation: ""
     });
-    setItemInput(""); // Reset item input
+    setItemInput("");
     setShowRequestForm(false);
   };
 
@@ -91,10 +85,14 @@ export const Chat = ({ room }) => {
     await updateDoc(messageRef, {
       fulfilled: true
     });
+
+    // Set the requestId for private chat
+    setPrivateChatRequestId(messageId);
+    setShowPrivateChat(true);
   };
 
   const handleViewDetails = (messageId) => {
-    setExpandedMessageId(expandedMessageId === messageId ? null : messageId); // Toggle the expanded state
+    setExpandedMessageId(expandedMessageId === messageId ? null : messageId);
   };
 
   const handleRequestButtonClick = () => {
@@ -103,7 +101,7 @@ export const Chat = ({ room }) => {
   };
 
   const handleICanGetClick = () => {
-    setNewMessage(""); // Clear the message input to avoid any unwanted text
+    setNewMessage("");
   };
 
   const handleAddItem = () => {
@@ -112,12 +110,21 @@ export const Chat = ({ room }) => {
         ...prevData,
         items: [...prevData.items, itemInput]
       }));
-      setItemInput(""); // Clear input field after adding
+      setItemInput("");
     }
   };
 
   const handleItemInputChange = (event) => {
     setItemInput(event.target.value);
+  };
+
+  const handleChatButtonClick = (requestId) => {
+    setPrivateChatRequestId(requestId);
+    setShowPrivateChat(true);
+  };
+
+  const handleClosePrivateChat = () => {
+    setShowPrivateChat(false);
   };
 
   return (
@@ -143,7 +150,7 @@ export const Chat = ({ room }) => {
                 <button
                   className="fulfill-button"
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevents the click from triggering the message click event
+                    e.stopPropagation();
                     handleFulfill(message.id);
                   }}
                 >
@@ -152,11 +159,20 @@ export const Chat = ({ room }) => {
                 <button
                   className="view-details-button"
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevents the click from triggering the message click event
+                    e.stopPropagation();
                     handleViewDetails(message.id);
                   }}
                 >
                   {expandedMessageId === message.id ? "Hide Details" : "View Details"}
+                </button>
+                <button
+                  className="chat-button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleChatButtonClick(message.id);
+                  }}
+                >
+                  Chat
                 </button>
               </div>
             )}
@@ -203,21 +219,22 @@ export const Chat = ({ room }) => {
           <h2>Request Details</h2>
           <form onSubmit={handleRequestFormSubmit}>
             <label>
-              What do you want:
+              Heading:
               <input
                 type="text"
                 value={requestFormData.heading}
-                onChange={(e) => setRequestFormData({ ...requestFormData, heading: e.target.value })}
-                placeholder="What do you want?"
+                onChange={(e) =>
+                  setRequestFormData({ ...requestFormData, heading: e.target.value })
+                }
               />
             </label>
             <label>
-              List of items required:
+              Items:
               <input
                 type="text"
                 value={itemInput}
                 onChange={handleItemInputChange}
-                placeholder="Add an item"
+                placeholder="Enter item name"
               />
               <button type="button" onClick={handleAddItem}>
                 Add Item
@@ -229,33 +246,47 @@ export const Chat = ({ room }) => {
               </ul>
             </label>
             <label>
-              Logistics fees offered:
+              Logistics Fees:
               <input
                 type="text"
                 value={requestFormData.logisticsFees}
-                onChange={(e) => setRequestFormData({ ...requestFormData, logisticsFees: e.target.value })}
+                onChange={(e) =>
+                  setRequestFormData({ ...requestFormData, logisticsFees: e.target.value })
+                }
               />
             </label>
             <label>
-              Pickup location:
+              Pickup Location:
               <input
                 type="text"
                 value={requestFormData.pickupLocation}
-                onChange={(e) => setRequestFormData({ ...requestFormData, pickupLocation: e.target.value })}
+                onChange={(e) =>
+                  setRequestFormData({ ...requestFormData, pickupLocation: e.target.value })
+                }
               />
             </label>
             <label>
-              Drop location:
+              Drop Location:
               <input
                 type="text"
                 value={requestFormData.dropLocation}
-                onChange={(e) => setRequestFormData({ ...requestFormData, dropLocation: e.target.value })}
+                onChange={(e) =>
+                  setRequestFormData({ ...requestFormData, dropLocation: e.target.value })
+                }
               />
             </label>
-            <button type="submit" className="submit-button">Submit</button>
-            <button type="button" className="close-button" onClick={() => setShowRequestForm(false)}>Close</button>
+            <button type="submit">Submit Request</button>
+            <button type="button" onClick={() => setShowRequestForm(false)}>
+              Cancel
+            </button>
           </form>
         </div>
+      )}
+      {showPrivateChat && (
+        <PrivateChat
+          requestId={privateChatRequestId}
+          onClose={handleClosePrivateChat}
+        />
       )}
     </div>
   );
