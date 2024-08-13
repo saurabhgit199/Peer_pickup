@@ -145,7 +145,7 @@ export const Chat = ({ room }) => {
           >
             <span className="user">{message.user}:</span>
             <div className="message-text">{message.text}</div>
-            {message.text.startsWith('I Want') && !message.fulfilled && (
+            {message.text.startsWith('I Want') && (
               <div className="message-actions">
                 <button
                   className="fulfill-button"
