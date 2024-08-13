@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { db, auth } from "../firebase-config";
 import { collection, addDoc, query, where, onSnapshot } from "firebase/firestore";
 import "../styles/PrivateChat.css";
@@ -7,6 +7,7 @@ export const PrivateChat = ({ requestId, onClose }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const chatRef = collection(db, "privateChats");
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
     const q = query(
@@ -19,11 +20,20 @@ export const PrivateChat = ({ requestId, onClose }) => {
       snapshot.forEach((doc) => {
         fetchedMessages.push({ ...doc.data(), id: doc.id });
       });
+      
+      // Sort messages by createdAt timestamp
+      fetchedMessages.sort((a, b) => a.createdAt.seconds - b.createdAt.seconds);
       setMessages(fetchedMessages);
     });
 
     return () => unsubscribe();
   }, [requestId]);
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -59,6 +69,7 @@ export const PrivateChat = ({ requestId, onClose }) => {
             <strong>{message.user}:</strong> {message.text}
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
       <form onSubmit={handleSubmit} className="private-chat-form">
         <input
